@@ -60,6 +60,48 @@ export const DistanceMetric = {
 } as const;
 export type DistanceMetric = (typeof DistanceMetric)[keyof typeof DistanceMetric];
 
+export const AgentStatus = {
+  Active: 'active',
+  Idle: 'idle',
+  Busy: 'busy',
+  Error: 'error',
+} as const;
+export type AgentStatus = (typeof AgentStatus)[keyof typeof AgentStatus];
+
+export const AgentPresence = {
+  Online: 'online',
+  Disconnected: 'disconnected',
+  Offline: 'offline',
+} as const;
+export type AgentPresence = (typeof AgentPresence)[keyof typeof AgentPresence];
+
+export const FleetCommandType = {
+  Restart: 'restart',
+  UpdateConfig: 'update_config',
+  RevokeCredentials: 'revoke_credentials',
+  InjectTool: 'inject_tool',
+  RemoveTool: 'remove_tool',
+  Pause: 'pause',
+  Resume: 'resume',
+  CollectDiagnostics: 'collect_diagnostics',
+  UpdateVersion: 'update_version',
+} as const;
+export type FleetCommandType = (typeof FleetCommandType)[keyof typeof FleetCommandType];
+
+export const FleetMessageType = {
+  ClientHello: 'client_hello',
+  ServerHello: 'server_hello',
+  Heartbeat: 'heartbeat',
+  MetricsReport: 'metrics_report',
+  ToolCallTrace: 'tool_call_trace',
+  AgentAlert: 'agent_alert',
+  CommandAck: 'command_ack',
+  Command: 'command',
+  ConfigUpdate: 'config_update',
+  CapabilityChange: 'capability_change',
+} as const;
+export type FleetMessageType = (typeof FleetMessageType)[keyof typeof FleetMessageType];
+
 // ── Auth ────────────────────────────────────────────────────────────
 
 export interface TokenRequest {
