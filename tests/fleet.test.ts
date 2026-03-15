@@ -252,7 +252,7 @@ describe('FleetConnection', () => {
     expect(conn.currentSessionId).toBeNull();
   });
 
-  it('close prevents reconnection', () => {
+  it('close prevents reconnection', async () => {
     const conn = new FleetConnection({
       url: 'wss://example.com/v1/fleet/ws',
       token: 'jwt-token',
