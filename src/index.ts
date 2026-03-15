@@ -40,6 +40,10 @@ export {
   FilterOp,
   AggregateType,
   DistanceMetric,
+  AgentStatus,
+  AgentPresence,
+  FleetCommandType,
+  FleetMessageType,
 } from './models.js';
 
 export type {
