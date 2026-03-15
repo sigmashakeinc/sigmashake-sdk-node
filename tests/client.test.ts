@@ -28,6 +28,7 @@ describe('SigmaShake client', () => {
     expect(client.soc).toBeDefined();
     expect(client.gateway).toBeDefined();
     expect(client.db).toBeDefined();
+    expect(client.fleet).toBeDefined();
   });
 
   it('uses default base URL', () => {
