@@ -260,7 +260,7 @@ describe('FleetConnection', () => {
       version: '1.0.0',
     });
     conn.close();
-    expect(conn.connect()).rejects.toThrow('FleetConnection has been closed');
+    await expect(conn.connect()).rejects.toThrow('FleetConnection has been closed');
   });
 
   it('on/off register and remove listeners', () => {
