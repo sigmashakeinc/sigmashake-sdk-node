@@ -78,7 +78,7 @@ export class FleetConnection {
   private metricsProvider: (() => Omit<MetricsReportPayload, 'agentId'>) | null = null;
 
   private readonly config: Required<
-    Pick<FleetConnectionConfig, 'maxReconnectAttempts' | 'reconnectDelayMs' | 'maxReconnectDelayMs'>
+    Pick<FleetConnectionConfig, 'maxReconnectAttempts' | 'reconnectDelayMs' | 'maxReconnectDelayMs' | 'capabilities'>
   > &
     FleetConnectionConfig;
 
