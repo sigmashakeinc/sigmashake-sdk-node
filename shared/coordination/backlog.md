@@ -4,13 +4,6 @@ Items here are not yet planned. To start work, create a workstream file and add 
 
 ## Items
 
-### [BL-001] gRPC/HTTP2 Transport Support
-**Priority:** high
-**Added:** 2026-03-15
-**Description:** Add gRPC as an alternative transport to REST for all agent APIs. Requires .proto definitions in `shared/coordination/contracts/grpc/`, tonic integration in sigmashake_inc, and client SDK updates (node, python, terraform provider).
-**Depends on:** OpenAPI spec stabilization
-**Scope:** api, infra, sdk-node, sdk-python, terraform-provider
-
 ### [BL-003] Prometheus Metrics Endpoint
 **Priority:** high
 **Added:** 2026-03-15
@@ -45,3 +38,10 @@ Items here are not yet planned. To start work, create a workstream file and add 
 **Description:** Design and implement admin dashboard for governance controls, account management, and system monitoring. Requires both UI design work and API integration with existing governance crates.
 **Depends on:** --
 **Scope:** frontend, api, governance
+
+### [BL-007] Open-Source Live Feed — Redacted Community Activity
+**Priority:** medium
+**Added:** 2026-03-15
+**Description:** Users on the open-source/free tier automatically contribute anonymized activity events to the public live feed on the homepage. All enforcement actions (blocked, allowed, rate-limited, policy violations, etc.) are posted in real-time, but with full data redaction: IP addresses, user/agent names, tenant IDs, file paths, and any PII are stripped or replaced with generic placeholders before publishing. This creates a "pulse of the network" view showing real-world agent security activity without exposing any user data. Requires: (1) event pipeline from Shield/Gateway that emits redacted copies of enforcement events, (2) redaction layer that strips all identifying fields before the event leaves the user's environment, (3) opt-in consent flow in the open-source setup, (4) WebSocket or SSE endpoint to stream redacted events to the homepage AgentFeed component, (5) rate limiting to prevent feed spam.
+**Depends on:** BL-005 (webhook delivery for event transport)
+**Scope:** backend, frontend, infra, api
