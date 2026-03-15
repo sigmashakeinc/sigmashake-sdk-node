@@ -40,6 +40,7 @@ export class SigmaShake {
   readonly soc: SocApi;
   readonly gateway: GatewayApi;
   readonly db: DbApi;
+  readonly fleet: FleetApi;
 
   constructor(config: SigmaShakeConfig) {
     if (!config.apiKey) {
