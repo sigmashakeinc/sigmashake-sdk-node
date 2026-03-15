@@ -8,6 +8,7 @@ import { MemoryApi } from './memory.js';
 import { SocApi } from './soc.js';
 import { GatewayApi } from './gateway.js';
 import { DbApi } from './db.js';
+import { FleetApi } from './fleet.js';
 
 export interface SigmaShakeConfig {
   /** API key (sk-...) */
