@@ -504,3 +504,176 @@ export interface ClusterStatusResponse {
   shards: number;
   healthy: boolean;
 }
+
+// ── Fleet ──────────────────────────────────────────────────────────
+
+export interface FleetStatus {
+  totalAgents: number;
+  onlineAgents: number;
+  degradedAgents: number;
+  offlineAgents: number;
+  shardCount: number;
+}
+
+export interface FleetAgentSummary {
+  agentId: string;
+  status: AgentStatus;
+  presence: AgentPresence;
+  lastSeen: string;
+  version: string;
+  cpuPct: number | null;
+  llmCostUsd: number | null;
+}
+
+export interface ListAgentsParams {
+  status?: AgentStatus;
+  presence?: AgentPresence;
+  limit?: number;
+  offset?: number;
+  search?: string;
+}
+
+export interface AgentListResponse {
+  agents: FleetAgentSummary[];
+  total: number;
+  hasMore: boolean;
+}
+
+export interface FleetAgentDetail {
+  agentId: string;
+  status: AgentStatus;
+  presence: AgentPresence;
+  version: string;
+  capabilities: string[];
+  connectedAt: string;
+  lastSeen: string;
+  lastHeartbeat: string;
+  shardId: string;
+  metadata: Record<string, unknown>;
+}
+
+export interface FleetCommand {
+  commandType: FleetCommandType;
+  payload?: Record<string, unknown>;
+}
+
+export interface FleetCommandAck {
+  commandId: string;
+  agentId: string;
+  success: boolean;
+  message?: string;
+  timestamp: string;
+}
+
+export interface FleetBroadcastResult {
+  commandId: string;
+  targeted: number;
+  acknowledged: number;
+}
+
+export interface FleetAgentMetric {
+  timestamp: string;
+  cpuPct: number;
+  memoryMb: number;
+  llmTokensIn: number;
+  llmTokensOut: number;
+  llmCostUsd: number;
+}
+
+export interface AgentMetricsParams {
+  range?: '1h' | '24h' | '7d';
+}
+
+export interface AgentMetricsResponse {
+  metrics: FleetAgentMetric[];
+}
+
+export interface AgentCommandsParams {
+  limit?: number;
+  offset?: number;
+}
+
+export interface AgentCommandRow {
+  id: string;
+  commandType: FleetCommandType;
+  payload: Record<string, unknown>;
+  issuedAt: string;
+  acked: boolean;
+  ackMessage?: string;
+}
+
+export interface AgentCommandsResponse {
+  commands: AgentCommandRow[];
+  total: number;
+  hasMore: boolean;
+}
+
+export interface FleetConfig {
+  heartbeatIntervalSecs: number;
+  metricsIntervalSecs: number;
+  maxAgents: number;
+  alertThresholds: {
+    missedHeartbeats: number;
+    errorRatePct: number;
+  };
+  autoScaleEnabled: boolean;
+}
+
+export interface FleetMessage {
+  version: number;
+  messageType: FleetMessageType;
+  timestamp: string;
+  payload: Record<string, unknown>;
+}
+
+export interface ClientHelloPayload {
+  agentId: string;
+  version: string;
+  capabilities: string[];
+}
+
+export interface ServerHelloPayload {
+  sessionId: string;
+  heartbeatIntervalMs: number;
+  metricsIntervalMs: number;
+}
+
+export interface HeartbeatPayload {
+  agentId: string;
+  status: AgentStatus;
+  uptimeSecs: number;
+}
+
+export interface MetricsReportPayload {
+  agentId: string;
+  cpuPct: number;
+  memoryMb: number;
+  llmTokensIn: number;
+  llmTokensOut: number;
+  llmCostUsd: number;
+  activeTools: number;
+  activeSessions: number;
+}
+
+export interface FleetToolCallTrace {
+  agentId: string;
+  toolName: string;
+  input: Record<string, unknown>;
+  output?: Record<string, unknown>;
+  durationMs: number;
+  timestamp: string;
+}
+
+export interface FleetAlertPayload {
+  agentId: string;
+  severity: string;
+  message: string;
+  metadata?: Record<string, unknown>;
+}
+
+export interface FleetEvent {
+  type: string;
+  agentId?: string;
+  timestamp: string;
+  data: Record<string, unknown>;
+}
