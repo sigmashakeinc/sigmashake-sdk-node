@@ -11,6 +11,8 @@ export { MemoryApi } from './memory.js';
 export { SocApi, type ListIncidentsParams } from './soc.js';
 export { GatewayApi } from './gateway.js';
 export { DbApi } from './db.js';
+export { FleetApi } from './fleet.js';
+export { FleetConnection, type FleetConnectionConfig } from './fleet-ws.js';
 
 // Errors
 export {
