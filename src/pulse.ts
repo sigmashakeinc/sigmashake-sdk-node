@@ -92,7 +92,13 @@ export class PulseApi {
 
   /** List pipeline runs with optional pagination and date-range filtering. */
   getRuns(params?: GetRunsParams): Promise<PulseRunsResponse> {
-    return this.http.get<PulseRunsResponse>('/v1/pulse/history', params as Record<string, unknown>);
+    const query = new URLSearchParams();
+    if (params?.page !== undefined) query.set('page', String(params.page));
+    if (params?.per_page !== undefined) query.set('per_page', String(params.per_page));
+    if (params?.from) query.set('from', params.from);
+    if (params?.to) query.set('to', params.to);
+    const qs = query.toString();
+    return this.http.get<PulseRunsResponse>(qs ? `/v1/pulse/history?${qs}` : '/v1/pulse/history');
   }
 
   /** Get a single pipeline run by ID. */
