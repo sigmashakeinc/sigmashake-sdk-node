@@ -115,12 +115,20 @@ export class PulseApi {
 
   /** Get aggregated pipeline metrics with optional time-range filtering. */
   getMetrics(params?: GetMetricsParams): Promise<PulseMetrics> {
-    return this.http.get<PulseMetrics>('/v1/pulse/metrics', params as Record<string, unknown>);
+    const query = new URLSearchParams();
+    if (params?.from) query.set('from', params.from);
+    if (params?.to) query.set('to', params.to);
+    const qs = query.toString();
+    return this.http.get<PulseMetrics>(qs ? `/v1/pulse/metrics?${qs}` : '/v1/pulse/metrics');
   }
 
   /** Get detected bottlenecks with optional score threshold and limit. */
   getBottlenecks(params?: GetBottlenecksParams): Promise<BottlenecksResponse> {
-    return this.http.get<BottlenecksResponse>('/v1/pulse/bottlenecks', params as Record<string, unknown>);
+    const query = new URLSearchParams();
+    if (params?.min_score !== undefined) query.set('min_score', String(params.min_score));
+    if (params?.limit !== undefined) query.set('limit', String(params.limit));
+    const qs = query.toString();
+    return this.http.get<BottlenecksResponse>(qs ? `/v1/pulse/bottlenecks?${qs}` : '/v1/pulse/bottlenecks');
   }
 
   /** Get current Pulse system status. */
