@@ -9,6 +9,7 @@ import { SocApi } from './soc.js';
 import { GatewayApi } from './gateway.js';
 import { DbApi } from './db.js';
 import { FleetApi } from './fleet.js';
+import { PulseApi } from './pulse.js';
 
 export interface SigmaShakeConfig {
   /** API key (sk-...) */
