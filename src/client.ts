@@ -69,5 +69,6 @@ export class SigmaShake {
     this.gateway = new GatewayApi(http);
     this.db = new DbApi(http);
     this.fleet = new FleetApi(http);
+    this.pulse = new PulseApi(http);
   }
 }
