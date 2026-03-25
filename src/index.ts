@@ -13,6 +13,23 @@ export { GatewayApi } from './gateway.js';
 export { DbApi } from './db.js';
 export { FleetApi } from './fleet.js';
 export { FleetConnection, type FleetConnectionConfig } from './fleet-ws.js';
+export { PulseApi } from './pulse.js';
+export type {
+  PushEventParams,
+  PushEventResponse,
+  GetRunsParams,
+  PulseRunsResponse,
+  PulseRun,
+  TriggerRunParams,
+  TriggerRunResponse,
+  GetMetricsParams,
+  PulseMetrics,
+  GetBottlenecksParams,
+  BottleneckEntry,
+  BottlenecksResponse,
+  PulseStatus,
+  AiBriefResponse,
+} from './pulse.js';
 
 // Errors
 export {
