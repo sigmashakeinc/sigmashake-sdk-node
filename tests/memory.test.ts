@@ -37,7 +37,7 @@ describe('MemoryApi', () => {
 
   // ── store ───────────────────────────────────────────────────────
 
-  it('store sends POST to /v1/memory', async () => {
+  it('store sends PUT to /api/v1/agents/:agentId/memory/:key', async () => {
     const entry: MemoryEntry = {
       key: 'user-pref',
       value: '{"theme":"dark"}',
@@ -48,14 +48,14 @@ describe('MemoryApi', () => {
     mockFetch(200, entry);
     const client = new SigmaShake({ apiKey: 'sk-test' });
 
-    const result = await client.memory.store({ key: 'user-pref', value: '{"theme":"dark"}', tags: ['session-1', 'prefs'] });
+    const result = await client.memory.store('agent-1', 'user-pref', { key: 'user-pref', value: '{"theme":"dark"}', tags: ['session-1', 'prefs'] });
 
     expect(result.key).toBe('user-pref');
     expect(result.value).toBe('{"theme":"dark"}');
     expect(result.tags).toEqual(['session-1', 'prefs']);
     const [url, opts] = (globalThis.fetch as ReturnType<typeof vi.fn>).mock.calls[0];
-    expect(url).toBe('https://api.sigmashake.com/v1/memory');
-    expect(opts.method).toBe('POST');
+    expect(url).toBe('https://api.sigmashake.com/api/v1/agents/agent-1/memory/user-pref');
+    expect(opts.method).toBe('PUT');
     const body = JSON.parse(opts.body);
     expect(body.key).toBe('user-pref');
     expect(body.tags).toHaveLength(2);
@@ -66,27 +66,26 @@ describe('MemoryApi', () => {
     mockFetch(200, entry);
     const client = new SigmaShake({ apiKey: 'sk-test' });
 
-    const result = await client.memory.store({ key: 'k1', value: 'v1' });
+    const result = await client.memory.store('agent-1', 'k1', { key: 'k1', value: 'v1' });
 
     expect(result.key).toBe('k1');
-    const [, opts] = (globalThis.fetch as ReturnType<typeof vi.fn>).mock.calls[0];
-    const body = JSON.parse(opts.body);
-    expect(body.tags).toBeUndefined();
+    const [url] = (globalThis.fetch as ReturnType<typeof vi.fn>).mock.calls[0];
+    expect(url).toBe('https://api.sigmashake.com/api/v1/agents/agent-1/memory/k1');
   });
 
   // ── get ─────────────────────────────────────────────────────────
 
-  it('get sends GET to /v1/memory/:key', async () => {
+  it('get sends GET to /api/v1/agents/:agentId/memory/:key', async () => {
     const entry: MemoryEntry = { key: 'context', value: 'some data', tags: ['t1'], createdAt: '', updatedAt: '' };
     mockFetch(200, entry);
     const client = new SigmaShake({ apiKey: 'sk-test' });
 
-    const result = await client.memory.get('context');
+    const result = await client.memory.get('agent-1', 'context');
 
     expect(result.key).toBe('context');
     expect(result.value).toBe('some data');
     const [url, opts] = (globalThis.fetch as ReturnType<typeof vi.fn>).mock.calls[0];
-    expect(url).toBe('https://api.sigmashake.com/v1/memory/context');
+    expect(url).toBe('https://api.sigmashake.com/api/v1/agents/agent-1/memory/context');
     expect(opts.method).toBe('GET');
   });
 
@@ -94,22 +93,22 @@ describe('MemoryApi', () => {
     mockFetch(200, { key: 'a/b', value: '', tags: [], createdAt: '', updatedAt: '' });
     const client = new SigmaShake({ apiKey: 'sk-test' });
 
-    await client.memory.get('a/b');
+    await client.memory.get('agent-1', 'a/b');
 
     const [url] = (globalThis.fetch as ReturnType<typeof vi.fn>).mock.calls[0];
-    expect(url).toBe('https://api.sigmashake.com/v1/memory/a%2Fb');
+    expect(url).toBe('https://api.sigmashake.com/api/v1/agents/agent-1/memory/a%2Fb');
   });
 
   // ── delete ──────────────────────────────────────────────────────
 
-  it('delete sends DELETE to /v1/memory/:key', async () => {
+  it('delete sends DELETE to /api/v1/agents/:agentId/memory/:key', async () => {
     mockFetch(204, undefined);
     const client = new SigmaShake({ apiKey: 'sk-test' });
 
-    await client.memory.delete('old-key');
+    await client.memory.delete('agent-1', 'old-key');
 
     const [url, opts] = (globalThis.fetch as ReturnType<typeof vi.fn>).mock.calls[0];
-    expect(url).toBe('https://api.sigmashake.com/v1/memory/old-key');
+    expect(url).toBe('https://api.sigmashake.com/api/v1/agents/agent-1/memory/old-key');
     expect(opts.method).toBe('DELETE');
   });
 
@@ -117,15 +116,15 @@ describe('MemoryApi', () => {
     mockFetch(204, undefined);
     const client = new SigmaShake({ apiKey: 'sk-test' });
 
-    await client.memory.delete('key with spaces');
+    await client.memory.delete('agent-1', 'key with spaces');
 
     const [url] = (globalThis.fetch as ReturnType<typeof vi.fn>).mock.calls[0];
-    expect(url).toBe('https://api.sigmashake.com/v1/memory/key%20with%20spaces');
+    expect(url).toBe('https://api.sigmashake.com/api/v1/agents/agent-1/memory/key%20with%20spaces');
   });
 
   // ── recall ──────────────────────────────────────────────────────
 
-  it('recall sends POST to /v1/memory/recall', async () => {
+  it('recall sends POST to /api/v1/agents/:agentId/memory/search', async () => {
     const entries: MemoryEntry[] = [
       { key: 'k1', value: 'v1', tags: ['session-1'], createdAt: '', updatedAt: '' },
       { key: 'k2', value: 'v2', tags: ['session-1'], createdAt: '', updatedAt: '' },
@@ -133,12 +132,12 @@ describe('MemoryApi', () => {
     mockFetch(200, entries);
     const client = new SigmaShake({ apiKey: 'sk-test' });
 
-    const result = await client.memory.recall({ tags: ['session-1'], limit: 10 });
+    const result = await client.memory.recall('agent-1', { tags: ['session-1'], limit: 10 });
 
     expect(result).toHaveLength(2);
     expect(result[0].key).toBe('k1');
     const [url, opts] = (globalThis.fetch as ReturnType<typeof vi.fn>).mock.calls[0];
-    expect(url).toBe('https://api.sigmashake.com/v1/memory/recall');
+    expect(url).toBe('https://api.sigmashake.com/api/v1/agents/agent-1/memory/search');
     expect(opts.method).toBe('POST');
     const body = JSON.parse(opts.body);
     expect(body.tags).toEqual(['session-1']);
@@ -149,9 +148,10 @@ describe('MemoryApi', () => {
     mockFetch(200, []);
     const client = new SigmaShake({ apiKey: 'sk-test' });
 
-    await client.memory.recall({ prefix: 'user-' });
+    await client.memory.recall('agent-1', { prefix: 'user-' });
 
-    const [, opts] = (globalThis.fetch as ReturnType<typeof vi.fn>).mock.calls[0];
+    const [url, opts] = (globalThis.fetch as ReturnType<typeof vi.fn>).mock.calls[0];
+    expect(url).toBe('https://api.sigmashake.com/api/v1/agents/agent-1/memory/search');
     const body = JSON.parse(opts.body);
     expect(body.prefix).toBe('user-');
   });
@@ -162,21 +162,21 @@ describe('MemoryApi', () => {
     mockFetch(401, { message: 'Unauthorized' });
     const client = new SigmaShake({ apiKey: 'sk-bad' });
 
-    await expect(client.memory.get('key')).rejects.toThrow(AuthenticationError);
+    await expect(client.memory.get('agent-1', 'key')).rejects.toThrow(AuthenticationError);
   });
 
   it('throws AuthorizationError on 403', async () => {
     mockFetch(403, { message: 'Forbidden' });
     const client = new SigmaShake({ apiKey: 'sk-test' });
 
-    await expect(client.memory.delete('key')).rejects.toThrow(AuthorizationError);
+    await expect(client.memory.delete('agent-1', 'key')).rejects.toThrow(AuthorizationError);
   });
 
   it('throws NotFoundError on 404', async () => {
     mockFetch(404, { message: 'Key not found' });
     const client = new SigmaShake({ apiKey: 'sk-test' });
 
-    await expect(client.memory.get('nonexistent')).rejects.toThrow(NotFoundError);
+    await expect(client.memory.get('agent-1', 'nonexistent')).rejects.toThrow(NotFoundError);
   });
 
   it('throws RateLimitError on 429', async () => {
@@ -184,7 +184,7 @@ describe('MemoryApi', () => {
     const client = new SigmaShake({ apiKey: 'sk-test' });
 
     try {
-      await client.memory.store({ key: 'k', value: 'v' });
+      await client.memory.store('agent-1', 'k', { key: 'k', value: 'v' });
       expect.unreachable('should have thrown');
     } catch (err) {
       expect(err).toBeInstanceOf(RateLimitError);
@@ -196,6 +196,6 @@ describe('MemoryApi', () => {
     mockFetch(500, { message: 'Internal error' });
     const client = new SigmaShake({ apiKey: 'sk-test' });
 
-    await expect(client.memory.recall({ tags: [] })).rejects.toThrow(ServerError);
+    await expect(client.memory.recall('agent-1', { tags: [] })).rejects.toThrow(ServerError);
   });
 });
