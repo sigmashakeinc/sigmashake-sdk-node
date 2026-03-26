@@ -45,29 +45,29 @@ describe('SocApi', () => {
     expect(client.soc).toBeDefined();
   });
 
-  // ── listIncidents ───────────────────────────────────────────────
+  // ── listAlerts ──────────────────────────────────────────────────
 
-  it('listIncidents sends GET to /v1/soc/incidents', async () => {
+  it('listAlerts sends GET to /api/v1/soc/alerts', async () => {
     const incidents: StoredIncident[] = [
       { id: 'inc-1', severity: 'high', status: 'open', title: 'Breach', description: 'Data leak', createdAt: '', updatedAt: '' },
     ];
     mockFetch(200, incidents);
     const client = new SigmaShake({ apiKey: 'sk-test' });
 
-    const result = await client.soc.listIncidents();
+    const result = await client.soc.listAlerts();
 
     expect(result).toHaveLength(1);
     expect(result[0].id).toBe('inc-1');
     const [url, opts] = (globalThis.fetch as ReturnType<typeof vi.fn>).mock.calls[0];
-    expect(url).toBe('https://api.sigmashake.com/v1/soc/incidents');
+    expect(url).toBe('https://api.sigmashake.com/api/v1/soc/alerts');
     expect(opts.method).toBe('GET');
   });
 
-  it('listIncidents passes filter params', async () => {
+  it('listAlerts passes filter params', async () => {
     mockFetch(200, []);
     const client = new SigmaShake({ apiKey: 'sk-test' });
 
-    await client.soc.listIncidents({ status: 'open', severity: 'critical', limit: 20, offset: 5 });
+    await client.soc.listAlerts({ status: 'open', severity: 'critical', limit: 20, offset: 5 });
 
     const [url] = (globalThis.fetch as ReturnType<typeof vi.fn>).mock.calls[0];
     expect(url).toContain('status=open');
@@ -76,14 +76,24 @@ describe('SocApi', () => {
     expect(url).toContain('offset=5');
   });
 
-  it('listIncidents without params omits query string', async () => {
+  it('listAlerts without params omits query string', async () => {
+    mockFetch(200, []);
+    const client = new SigmaShake({ apiKey: 'sk-test' });
+
+    await client.soc.listAlerts();
+
+    const [url] = (globalThis.fetch as ReturnType<typeof vi.fn>).mock.calls[0];
+    expect(url).toBe('https://api.sigmashake.com/api/v1/soc/alerts');
+  });
+
+  it('listIncidents is deprecated alias for listAlerts', async () => {
     mockFetch(200, []);
     const client = new SigmaShake({ apiKey: 'sk-test' });
 
     await client.soc.listIncidents();
 
     const [url] = (globalThis.fetch as ReturnType<typeof vi.fn>).mock.calls[0];
-    expect(url).toBe('https://api.sigmashake.com/v1/soc/incidents');
+    expect(url).toBe('https://api.sigmashake.com/api/v1/soc/alerts');
   });
 
   // ── getIncident ─────────────────────────────────────────────────
