@@ -34,7 +34,7 @@ export class AccountsApi {
 
   /** Update subscription tier or status. */
   updateSubscription(accountId: string, body: UpdateSubscriptionBody): Promise<Subscription> {
-    return this.http.patch<Subscription>(`/v1/accounts/${accountId}/subscription`, body);
+    return this.http.put<Subscription>(`/v1/accounts/${accountId}/subscription`, body);
   }
 
   /** List seats for an account. */
