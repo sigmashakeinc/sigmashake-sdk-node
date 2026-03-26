@@ -277,6 +277,14 @@ describe('SocApi', () => {
     expect(url).toBe('https://api.sigmashake.com/v1/soc/sessions/sess-1/cost');
   });
 
+  // ── topHosts ────────────────────────────────────────────────────
+
+  it('topHosts rejects with not-implemented error', async () => {
+    const client = new SigmaShake({ apiKey: 'sk-test' });
+
+    await expect(client.soc.topHosts()).rejects.toThrow('Not yet implemented');
+  });
+
   // ── getThreatHeatmap ────────────────────────────────────────────
 
   it('getThreatHeatmap sends GET to /v1/soc/threats/heatmap', async () => {
