@@ -69,7 +69,7 @@ describe('AuthApi', () => {
     await client.auth.revokeToken('tok-to-revoke');
 
     const [url, opts] = (globalThis.fetch as ReturnType<typeof vi.fn>).mock.calls[0];
-    expect(url).toBe('https://api.sigmashake.com/v1/auth/token/revoke');
+    expect(url).toBe('https://api.sigmashake.com/api/auth/token/revoke');
     expect(opts.method).toBe('POST');
     expect(JSON.parse(opts.body)).toEqual({ token: 'tok-to-revoke' });
   });
