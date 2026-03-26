@@ -65,7 +65,7 @@ export class SocApi {
 
   /** Get session timeline. */
   getTimeline(sessionId: string): Promise<SessionTimeline> {
-    return this.http.get<SessionTimeline>(`/v1/soc/sessions/${sessionId}/timeline`);
+    return this.http.get<SessionTimeline>(`/api/v1/soc/timeline/${encodeURIComponent(sessionId)}`);
   }
 
   /** Get host traffic summary. */
