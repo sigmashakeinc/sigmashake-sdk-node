@@ -107,6 +107,26 @@ describe('AgentsApi', () => {
     expect(opts.method).toBe('GET');
   });
 
+  // ── update ──────────────────────────────────────────────────────
+
+  it('update sends PATCH to /v1/agents/sessions/:id', async () => {
+    const session: AgentSession = {
+      sessionId: 'sess-1',
+      agentId: 'agent-1',
+      agentType: 'coding',
+      expiresAt: '2026-12-31',
+    };
+    mockFetch(200, session);
+    const client = new SigmaShake({ apiKey: 'sk-test' });
+
+    const result = await client.agents.update('sess-1', { agentType: 'review' });
+
+    expect(result.sessionId).toBe('sess-1');
+    const [url, opts] = (globalThis.fetch as ReturnType<typeof vi.fn>).mock.calls[0];
+    expect(url).toBe('https://api.sigmashake.com/v1/agents/sessions/sess-1');
+    expect(opts.method).toBe('PATCH');
+  });
+
   // ── terminateSession ────────────────────────────────────────────
 
   it('terminateSession sends DELETE to /v1/agents/sessions/:id', async () => {
