@@ -112,6 +112,79 @@ cd ../sigmashake-openapi
 The validator exits non-zero when drift is detected. Run it before submitting
 changes to `models.ts` and after any OpenAPI spec updates.
 
+## Key Classes and Methods
+
+### `SigmaShake` — Main Client
+
+```typescript
+import { SigmaShake } from 'sigmashake';
+
+const client = new SigmaShake({
+  apiKey: 'sk-...',               // required
+  baseUrl: 'https://api.sigmashake.com', // optional
+  timeout: 30000,                 // optional, ms
+  headers: {},                    // optional extra headers
+});
+```
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `auth` | `AuthApi` | Token creation and revocation |
+| `identity` | `IdentityApi` | Agent identity issuance and verification |
+| `accounts` | `AccountsApi` | Account, subscription, and seat management |
+| `agents` | `AgentsApi` | Agent session registration and lifecycle |
+| `shield` | `ShieldApi` | Operation risk scanning |
+| `documents` | `DocumentsApi` | Document CRUD and semantic search |
+| `memory` | `MemoryApi` | Agent memory store and recall |
+| `soc` | `SocApi` | Incidents, metrics, timelines, threat heatmaps |
+| `gateway` | `GatewayApi` | Tool call interception (pre/post) |
+| `db` | `DbApi` | Tables, queries, vector search, scroll, clusters |
+| `fleet` | `FleetApi` | Fleet status and agent management |
+| `pulse` | `PulseApi` | Platform health and bottleneck reporting |
+
+### `AuthApi`
+
+| Method | Signature | Description |
+|--------|-----------|-------------|
+| `createToken` | `(req: TokenRequest) => Promise<TokenResponse>` | Create a scoped auth token |
+| `revokeToken` | `(token: string) => Promise<void>` | Revoke an auth token |
+
+### `ShieldApi`
+
+| Method | Signature | Description |
+|--------|-----------|-------------|
+| `registerAgent` | `(req) => Promise<AgentSession>` | Register an agent session |
+| `scan` | `(req: ScanRequest) => Promise<ScanResult>` | Scan an operation for policy violations |
+| `endSession` | `(sessionId: string) => Promise<void>` | End an active agent session |
+
+### `MemoryApi`
+
+| Method | Signature | Description |
+|--------|-----------|-------------|
+| `store` | `(req: StoreRequest) => Promise<MemoryEntry>` | Store a key-value memory entry |
+| `recall` | `(query: MemoryQuery) => Promise<MemoryEntry[]>` | Recall memory entries by tags or key |
+| `delete` | `(key: string) => Promise<void>` | Delete a memory entry |
+
+### Error Classes
+
+| Class | Description |
+|-------|-------------|
+| `SigmaShakeError` | Base class for all SDK errors |
+| `AuthenticationError` | Invalid or missing API key (HTTP 401) |
+| `AuthorizationError` | Insufficient permissions (HTTP 403) |
+| `NotFoundError` | Resource not found (HTTP 404) |
+| `ValidationError` | Request validation failure (HTTP 422) |
+| `RateLimitError` | Rate limit exceeded (HTTP 429); has `retryAfterMs` |
+| `ServerError` | Server-side error (HTTP 5xx) |
+
+## Generating Docs
+
+```bash
+npm install
+npm run docs
+# Output in docs/index.html
+```
+
 ## License
 
 MIT
