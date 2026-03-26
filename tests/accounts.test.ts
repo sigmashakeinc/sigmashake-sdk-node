@@ -113,7 +113,7 @@ describe('AccountsApi', () => {
 
   // ── updateSubscription ──────────────────────────────────────────
 
-  it('updateSubscription sends PATCH to /v1/accounts/:id/subscription', async () => {
+  it('updateSubscription sends PUT to /v1/accounts/:id/subscription', async () => {
     const sub: Subscription = {
       id: 'sub-1',
       accountId: 'acc-1',
