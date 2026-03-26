@@ -202,7 +202,7 @@ describe('SocApi', () => {
 
   // ── getTimeline ─────────────────────────────────────────────────
 
-  it('getTimeline sends GET to /v1/soc/sessions/:id/timeline', async () => {
+  it('getTimeline sends GET to /api/v1/soc/timeline/:sessionId', async () => {
     const timeline: SessionTimeline = {
       sessionId: 'sess-1',
       events: [
@@ -219,7 +219,7 @@ describe('SocApi', () => {
     expect(result.events).toHaveLength(2);
     expect(result.events[0].type).toBe('tool_call');
     const [url] = (globalThis.fetch as ReturnType<typeof vi.fn>).mock.calls[0];
-    expect(url).toBe('https://api.sigmashake.com/v1/soc/sessions/sess-1/timeline');
+    expect(url).toBe('https://api.sigmashake.com/api/v1/soc/timeline/sess-1');
   });
 
   // ── getHostTraffic ──────────────────────────────────────────────
