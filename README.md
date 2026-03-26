@@ -14,7 +14,27 @@ npm install sigmashake
 import { SigmaShake } from 'sigmashake';
 
 const client = new SigmaShake({ apiKey: 'sk-...' });
+const myTool = client.gateway.wrap(myAgentFunction);
+// All calls to myTool are now intercepted, logged, and policy-checked
+```
 
+### Test connectivity
+
+```typescript
+console.log(await client.ping()); // { status: 'ok', latencyMs: 23 }
+```
+
+### Add multiple tools at once
+
+```typescript
+const search = client.gateway.wrap(searchFn);
+const writeFile = client.gateway.wrap(writeFileFn);
+const queryDb = client.gateway.wrap(queryDbFn);
+```
+
+### More examples
+
+```typescript
 // Auth
 const token = await client.auth.createToken({
   agentId: 'agent-1',
