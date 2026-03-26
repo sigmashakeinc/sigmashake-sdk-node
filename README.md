@@ -91,6 +91,27 @@ try {
 - Node.js 18+ (uses native `fetch`)
 - Also works in Deno, Bun, and modern browsers
 
+## OpenAPI Drift Detection
+
+Types in `src/models.ts` must match the canonical OpenAPI spec in
+`sigmashake-openapi/openapi.yaml`. A drift detector validates that all schemas
+and fields in the spec are represented in the SDK.
+
+```bash
+# From SDK root (requires sigmashake-openapi as sibling)
+python3 scripts/validate_models.py
+
+# JSON output for CI
+python3 scripts/validate_models.py --json
+
+# Or from the openapi repo
+cd ../sigmashake-openapi
+./validate-sdks.sh --node
+```
+
+The validator exits non-zero when drift is detected. Run it before submitting
+changes to `models.ts` and after any OpenAPI spec updates.
+
 ## License
 
 MIT
