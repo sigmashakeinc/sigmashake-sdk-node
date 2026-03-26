@@ -43,7 +43,7 @@ describe('AuthApi', () => {
     expect(result.expiresAt).toBe('2026-12-31');
     expect(result.scopes).toEqual(['read', 'write']);
     const [url, opts] = (globalThis.fetch as ReturnType<typeof vi.fn>).mock.calls[0];
-    expect(url).toBe('https://api.sigmashake.com/v1/auth/token');
+    expect(url).toBe('https://api.sigmashake.com/api/auth/token');
     expect(opts.method).toBe('POST');
     expect(opts.headers.Authorization).toBe('Bearer sk-test');
     expect(JSON.parse(opts.body)).toEqual({ agentId: 'agent-1', scopes: ['read', 'write'] });
