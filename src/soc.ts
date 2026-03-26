@@ -82,4 +82,9 @@ export class SocApi {
   getThreatHeatmap(): Promise<ThreatHeatmapEntry[]> {
     return this.http.get<ThreatHeatmapEntry[]>('/v1/soc/threats/heatmap');
   }
+
+  /** @deprecated Not yet implemented. */
+  topHosts(_host?: string): Promise<HostTrafficSummary[]> {
+    return Promise.reject(new Error('Not yet implemented'));
+  }
 }
