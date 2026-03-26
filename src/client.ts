@@ -44,6 +44,8 @@ export class SigmaShake {
   readonly fleet: FleetApi;
   readonly pulse: PulseApi;
 
+  private readonly _http: HttpClient;
+
   constructor(config: SigmaShakeConfig) {
     if (!config.apiKey) {
       throw new Error('apiKey is required');
@@ -57,6 +59,7 @@ export class SigmaShake {
     };
 
     const http = new HttpClient(httpConfig);
+    this._http = http;
 
     this.auth = new AuthApi(http);
     this.identity = new IdentityApi(http);
@@ -70,5 +73,17 @@ export class SigmaShake {
     this.db = new DbApi(http);
     this.fleet = new FleetApi(http);
     this.pulse = new PulseApi(http);
+  }
+
+  /**
+   * Verify connectivity to the SigmaShake API.
+   *
+   * @returns Object with `status` ('ok') and `latencyMs` (number).
+   * @throws SigmaShakeError if the API is unreachable.
+   */
+  async ping(): Promise<{ status: string; latencyMs: number }> {
+    const start = performance.now();
+    await this._http.get('/v1/health');
+    return { status: 'ok', latencyMs: Math.round(performance.now() - start) };
   }
 }
