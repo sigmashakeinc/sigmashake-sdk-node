@@ -130,7 +130,7 @@ describe('AccountsApi', () => {
     expect(result.tier).toBe('enterprise');
     const [url, opts] = (globalThis.fetch as ReturnType<typeof vi.fn>).mock.calls[0];
     expect(url).toBe('https://api.sigmashake.com/v1/accounts/acc-1/subscription');
-    expect(opts.method).toBe('PATCH');
+    expect(opts.method).toBe('PUT');
     expect(JSON.parse(opts.body)).toEqual({ tier: 'enterprise' });
   });
 
