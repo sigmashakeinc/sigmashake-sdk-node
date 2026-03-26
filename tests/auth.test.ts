@@ -129,68 +129,19 @@ describe('IdentityApi', () => {
 
   // ── issue ───────────────────────────────────────────────────────
 
-  it('issue sends POST to /v1/identity/issue', async () => {
-    const responseBody: IdentityTokenResponse = {
-      token: 'jwt-identity-tok',
-      expiresAt: '2026-12-31',
-      claims: { sub: 'agent-1', agentId: 'agent-1', capabilities: ['tool:bash'], iat: 1, exp: 2 },
-    };
-    mockFetch(200, responseBody);
+  it('issue rejects with not-implemented error', async () => {
     const client = new SigmaShake({ apiKey: 'sk-test' });
 
-    const result = await client.identity.issue({ agentId: 'agent-1', capabilities: ['tool:bash'], ttlSecs: 7200 });
-
-    expect(result.token).toBe('jwt-identity-tok');
-    expect(result.claims.agentId).toBe('agent-1');
-    expect(result.claims.capabilities).toEqual(['tool:bash']);
-    const [url, opts] = (globalThis.fetch as ReturnType<typeof vi.fn>).mock.calls[0];
-    expect(url).toBe('https://api.sigmashake.com/v1/identity/issue');
-    expect(opts.method).toBe('POST');
-    expect(JSON.parse(opts.body)).toEqual({ agentId: 'agent-1', capabilities: ['tool:bash'], ttlSecs: 7200 });
+    await expect(
+      client.identity.issue({ agentId: 'agent-1', capabilities: ['tool:bash'], ttlSecs: 7200 }),
+    ).rejects.toThrow('Not yet implemented');
   });
 
   // ── verify ──────────────────────────────────────────────────────
 
-  it('verify sends POST to /v1/identity/verify', async () => {
-    const responseBody: IdentityTokenResponse = {
-      token: 'jwt-identity-tok',
-      expiresAt: '2026-12-31',
-      claims: { sub: 'agent-2', agentId: 'agent-2', capabilities: ['tool:read'], iat: 10, exp: 20 },
-    };
-    mockFetch(200, responseBody);
+  it('verify rejects with not-implemented error', async () => {
     const client = new SigmaShake({ apiKey: 'sk-test' });
 
-    const result = await client.identity.verify('jwt-identity-tok');
-
-    expect(result.claims.agentId).toBe('agent-2');
-    const [url, opts] = (globalThis.fetch as ReturnType<typeof vi.fn>).mock.calls[0];
-    expect(url).toBe('https://api.sigmashake.com/v1/identity/verify');
-    expect(opts.method).toBe('POST');
-    expect(JSON.parse(opts.body)).toEqual({ token: 'jwt-identity-tok' });
-  });
-
-  // ── Error handling ──────────────────────────────────────────────
-
-  it('throws AuthenticationError on 401', async () => {
-    mockFetch(401, { message: 'Unauthorized' });
-    const client = new SigmaShake({ apiKey: 'sk-bad' });
-
-    await expect(client.identity.issue({ agentId: 'a1', capabilities: [], ttlSecs: 60 })).rejects.toThrow(
-      AuthenticationError,
-    );
-  });
-
-  it('throws AuthorizationError on 403', async () => {
-    mockFetch(403, { message: 'Forbidden' });
-    const client = new SigmaShake({ apiKey: 'sk-test' });
-
-    await expect(client.identity.verify('bad-token')).rejects.toThrow(AuthorizationError);
-  });
-
-  it('throws ServerError on 500', async () => {
-    mockFetch(500, { message: 'Internal error' });
-    const client = new SigmaShake({ apiKey: 'sk-test' });
-
-    await expect(client.identity.verify('tok')).rejects.toThrow(ServerError);
+    await expect(client.identity.verify('jwt-identity-tok')).rejects.toThrow('Not yet implemented');
   });
 });
