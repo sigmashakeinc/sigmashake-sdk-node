@@ -15,5 +15,3 @@ node_modules/
 *.tsbuildinfo
 .well-known/
 
-# Gemini CLI runtime artifacts
-.gemini/
