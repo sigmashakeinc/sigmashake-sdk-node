@@ -22,15 +22,20 @@ export interface ListIncidentsParams {
 export class SocApi {
   constructor(private readonly http: HttpClient) {}
 
-  /** List incidents with optional filters. */
-  listIncidents(params?: ListIncidentsParams): Promise<StoredIncident[]> {
+  /** List SOC alerts with optional filters. */
+  listAlerts(params?: ListIncidentsParams): Promise<StoredIncident[]> {
     const query = new URLSearchParams();
     if (params?.status) query.set('status', params.status);
     if (params?.severity) query.set('severity', params.severity);
     if (params?.limit !== undefined) query.set('limit', String(params.limit));
     if (params?.offset !== undefined) query.set('offset', String(params.offset));
     const qs = query.toString();
-    return this.http.get<StoredIncident[]>(`/v1/soc/incidents${qs ? `?${qs}` : ''}`);
+    return this.http.get<StoredIncident[]>(`/api/v1/soc/alerts${qs ? `?${qs}` : ''}`);
+  }
+
+  /** @deprecated Use listAlerts() instead. */
+  listIncidents(params?: ListIncidentsParams): Promise<StoredIncident[]> {
+    return this.listAlerts(params);
   }
 
   /** Get a single incident by ID. */
