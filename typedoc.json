@@ -1,0 +1,17 @@
+{
+  "entryPoints": ["src/index.ts"],
+  "out": "docs",
+  "name": "SigmaShake TypeScript SDK",
+  "readme": "README.md",
+  "excludePrivate": true,
+  "excludeProtected": false,
+  "excludeExternals": true,
+  "includeVersion": true,
+  "categorizeByGroup": true,
+  "navigationLinks": {
+    "Docs": "https://docs.sigmashake.com/sdk/node",
+    "GitHub": "https://github.com/sigmashakeinc/sigmashake-sdk-node"
+  },
+  "plugin": [],
+  "tsconfig": "tsconfig.json"
+}
