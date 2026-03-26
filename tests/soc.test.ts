@@ -309,7 +309,7 @@ describe('SocApi', () => {
     mockFetch(403, { message: 'Forbidden' });
     const client = new SigmaShake({ apiKey: 'sk-test' });
 
-    await expect(client.soc.listIncidents()).rejects.toThrow(AuthorizationError);
+    await expect(client.soc.listAlerts()).rejects.toThrow(AuthorizationError);
   });
 
   it('throws NotFoundError on 404', async () => {
