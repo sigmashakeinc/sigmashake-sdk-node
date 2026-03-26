@@ -19,6 +19,11 @@ export class AgentsApi {
     return this.http.get<AgentSession[]>(`/v1/agents/${agentId}/sessions`);
   }
 
+  /** Update an agent session. */
+  update(sessionId: string, body: Partial<AgentRegistration>): Promise<AgentSession> {
+    return this.http.patch<AgentSession>(`/v1/agents/sessions/${sessionId}`, body);
+  }
+
   /** Terminate an agent session. */
   terminateSession(sessionId: string): Promise<void> {
     return this.http.delete<void>(`/v1/agents/sessions/${sessionId}`);
