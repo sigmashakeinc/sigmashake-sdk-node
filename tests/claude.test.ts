@@ -108,10 +108,10 @@ function mockClient(): SigmaShake {
 }
 
 describe('createTools', () => {
-  it('returns 37 tools', async () => {
+  it('returns 49 tools', async () => {
     const { createTools } = await import('../src/claude.js');
     const tools = createTools(mockClient());
-    expect(tools).toHaveLength(37);
+    expect(tools).toHaveLength(49);
   });
 
   it('has all expected tool names', async () => {
