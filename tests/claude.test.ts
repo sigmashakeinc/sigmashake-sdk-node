@@ -298,4 +298,71 @@ describe('tool execution', () => {
     });
     expect(client.db.insert).toHaveBeenCalled();
   });
+
+  it('create_trigger calls client.agents.createTrigger', async () => {
+    await findTool('sigmashake_create_trigger').execute({
+      agent_id: 'a1', name: 'daily', prompt: 'Check status', max_turns: 10,
+    });
+    expect(client.agents.createTrigger).toHaveBeenCalled();
+  });
+
+  it('list_triggers calls client.agents.listTriggers', async () => {
+    await findTool('sigmashake_list_triggers').execute({ agent_id: 'a1' });
+    expect(client.agents.listTriggers).toHaveBeenCalledWith('a1');
+  });
+
+  it('execute_trigger calls client.agents.executeTrigger', async () => {
+    await findTool('sigmashake_execute_trigger').execute({ agent_id: 'a1', trigger_id: 't1' });
+    expect(client.agents.executeTrigger).toHaveBeenCalledWith('a1', 't1');
+  });
+
+  it('get_trigger_status calls client.agents.getTriggerStatus', async () => {
+    await findTool('sigmashake_get_trigger_status').execute({ agent_id: 'a1', trigger_id: 't1' });
+    expect(client.agents.getTriggerStatus).toHaveBeenCalledWith('a1', 't1');
+  });
+
+  it('delete_trigger calls client.agents.deleteTrigger', async () => {
+    await findTool('sigmashake_delete_trigger').execute({ agent_id: 'a1', trigger_id: 't1' });
+    expect(client.agents.deleteTrigger).toHaveBeenCalledWith('a1', 't1');
+  });
+
+  it('store_context calls client.agents.storeContext', async () => {
+    await findTool('sigmashake_store_context').execute({
+      agent_id: 'a1', conversation_context: { messages: [] }, system_prompt: 'Be helpful',
+    });
+    expect(client.agents.storeContext).toHaveBeenCalled();
+  });
+
+  it('get_context calls client.agents.getContext', async () => {
+    await findTool('sigmashake_get_context').execute({ agent_id: 'a1' });
+    expect(client.agents.getContext).toHaveBeenCalledWith('a1');
+  });
+
+  it('delete_context calls client.agents.deleteContext', async () => {
+    await findTool('sigmashake_delete_context').execute({ agent_id: 'a1' });
+    expect(client.agents.deleteContext).toHaveBeenCalledWith('a1');
+  });
+
+  it('register_tools calls client.agents.registerTools', async () => {
+    const toolDefs = [{ name: 'read_file', description: 'Read', input_schema: {} }];
+    await findTool('sigmashake_register_tools').execute({ agent_id: 'a1', tools: toolDefs });
+    expect(client.agents.registerTools).toHaveBeenCalledWith('a1', toolDefs);
+  });
+
+  it('list_agent_tools calls client.agents.listTools', async () => {
+    await findTool('sigmashake_list_agent_tools').execute({ agent_id: 'a1' });
+    expect(client.agents.listTools).toHaveBeenCalledWith('a1');
+  });
+
+  it('unregister_tool calls client.agents.unregisterTool', async () => {
+    await findTool('sigmashake_unregister_tool').execute({ agent_id: 'a1', tool_name: 'read_file' });
+    expect(client.agents.unregisterTool).toHaveBeenCalledWith('a1', 'read_file');
+  });
+
+  it('get_agent_usage calls client.agents.getUsage', async () => {
+    await findTool('sigmashake_get_agent_usage').execute({
+      agent_id: 'a1', from_date: '2026-03-01', to_date: '2026-03-27',
+    });
+    expect(client.agents.getUsage).toHaveBeenCalled();
+  });
 });
