@@ -111,7 +111,7 @@ describe('createTools', () => {
   it('returns 49 tools', async () => {
     const { createTools } = await import('../src/claude.js');
     const tools = createTools(mockClient());
-    expect(tools).toHaveLength(49);
+    expect(tools).toHaveLength(50);
   });
 
   it('has all expected tool names', async () => {
