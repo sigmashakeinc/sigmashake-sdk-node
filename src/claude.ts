@@ -864,6 +864,22 @@ export function createTools(client: SigmaShake) {
     sigmashake_get_subscription,
     // Auth
     sigmashake_create_token,
+    // Triggers
+    sigmashake_create_trigger,
+    sigmashake_list_triggers,
+    sigmashake_execute_trigger,
+    sigmashake_get_trigger_status,
+    sigmashake_delete_trigger,
+    // Context
+    sigmashake_store_context,
+    sigmashake_get_context,
+    sigmashake_delete_context,
+    // Agent Tools
+    sigmashake_register_tools,
+    sigmashake_list_agent_tools,
+    sigmashake_unregister_tool,
+    // Agent Usage
+    sigmashake_get_agent_usage,
   ];
 }
 
