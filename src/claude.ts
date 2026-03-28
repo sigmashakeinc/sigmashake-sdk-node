@@ -638,6 +638,182 @@ export function createTools(client: SigmaShake) {
     },
   });
 
+  // -- Triggers -------------------------------------------------------------
+
+  const sigmashake_create_trigger = betaZodTool({
+    name: 'sigmashake_create_trigger',
+    description: 'Create a remote trigger for an agent',
+    schema: z.object({
+      agent_id: z.string(),
+      name: z.string(),
+      prompt: z.string(),
+      tools: z.array(z.string()).optional(),
+      max_turns: z.number().optional().default(10),
+      model: z.string().optional(),
+      schedule: z.string().optional(),
+    }),
+    async execute(args) {
+      const body: Record<string, unknown> = {
+        name: args.name,
+        prompt: args.prompt,
+        max_turns: args.max_turns,
+      };
+      if (args.tools !== undefined) body.tools = args.tools;
+      if (args.model !== undefined) body.model = args.model;
+      if (args.schedule !== undefined) body.schedule = args.schedule;
+      const result = await client.agents.createTrigger(args.agent_id, body);
+      return jsonResult(result);
+    },
+  });
+
+  const sigmashake_list_triggers = betaZodTool({
+    name: 'sigmashake_list_triggers',
+    description: 'List remote triggers for an agent',
+    schema: z.object({ agent_id: z.string() }),
+    async execute(args) {
+      const result = await client.agents.listTriggers(args.agent_id);
+      return jsonResult(result);
+    },
+  });
+
+  const sigmashake_execute_trigger = betaZodTool({
+    name: 'sigmashake_execute_trigger',
+    description: 'Execute a remote trigger for an agent',
+    schema: z.object({
+      agent_id: z.string(),
+      trigger_id: z.string(),
+    }),
+    async execute(args) {
+      const result = await client.agents.executeTrigger(args.agent_id, args.trigger_id);
+      return jsonResult(result);
+    },
+  });
+
+  const sigmashake_get_trigger_status = betaZodTool({
+    name: 'sigmashake_get_trigger_status',
+    description: 'Get execution status of a remote trigger',
+    schema: z.object({
+      agent_id: z.string(),
+      trigger_id: z.string(),
+    }),
+    async execute(args) {
+      const result = await client.agents.getTriggerStatus(args.agent_id, args.trigger_id);
+      return jsonResult(result);
+    },
+  });
+
+  const sigmashake_delete_trigger = betaZodTool({
+    name: 'sigmashake_delete_trigger',
+    description: 'Delete a remote trigger for an agent',
+    schema: z.object({
+      agent_id: z.string(),
+      trigger_id: z.string(),
+    }),
+    async execute(args) {
+      await client.agents.deleteTrigger(args.agent_id, args.trigger_id);
+      return jsonResult('deleted');
+    },
+  });
+
+  // -- Context --------------------------------------------------------------
+
+  const sigmashake_store_context = betaZodTool({
+    name: 'sigmashake_store_context',
+    description: 'Store conversation context for an agent',
+    schema: z.object({
+      agent_id: z.string(),
+      conversation_context: z.record(z.unknown()),
+      system_prompt: z.string().optional(),
+      tool_config: z.record(z.unknown()).optional(),
+    }),
+    async execute(args) {
+      const body: Record<string, unknown> = {
+        conversation_context: args.conversation_context,
+      };
+      if (args.system_prompt !== undefined) body.system_prompt = args.system_prompt;
+      if (args.tool_config !== undefined) body.tool_config = args.tool_config;
+      const result = await client.agents.storeContext(args.agent_id, body);
+      return jsonResult(result);
+    },
+  });
+
+  const sigmashake_get_context = betaZodTool({
+    name: 'sigmashake_get_context',
+    description: 'Get stored conversation context for an agent',
+    schema: z.object({ agent_id: z.string() }),
+    async execute(args) {
+      const result = await client.agents.getContext(args.agent_id);
+      return jsonResult(result);
+    },
+  });
+
+  const sigmashake_delete_context = betaZodTool({
+    name: 'sigmashake_delete_context',
+    description: 'Delete stored conversation context for an agent',
+    schema: z.object({ agent_id: z.string() }),
+    async execute(args) {
+      await client.agents.deleteContext(args.agent_id);
+      return jsonResult('deleted');
+    },
+  });
+
+  // -- Agent Tools ----------------------------------------------------------
+
+  const sigmashake_register_tools = betaZodTool({
+    name: 'sigmashake_register_tools',
+    description: 'Register tools for an agent',
+    schema: z.object({
+      agent_id: z.string(),
+      tools: z.array(z.record(z.unknown())),
+    }),
+    async execute(args) {
+      const result = await client.agents.registerTools(args.agent_id, args.tools);
+      return jsonResult(result);
+    },
+  });
+
+  const sigmashake_list_agent_tools = betaZodTool({
+    name: 'sigmashake_list_agent_tools',
+    description: 'List registered tools for an agent',
+    schema: z.object({ agent_id: z.string() }),
+    async execute(args) {
+      const result = await client.agents.listTools(args.agent_id);
+      return jsonResult(result);
+    },
+  });
+
+  const sigmashake_unregister_tool = betaZodTool({
+    name: 'sigmashake_unregister_tool',
+    description: 'Unregister a tool from an agent',
+    schema: z.object({
+      agent_id: z.string(),
+      tool_name: z.string(),
+    }),
+    async execute(args) {
+      await client.agents.unregisterTool(args.agent_id, args.tool_name);
+      return jsonResult('deleted');
+    },
+  });
+
+  // -- Agent Usage ----------------------------------------------------------
+
+  const sigmashake_get_agent_usage = betaZodTool({
+    name: 'sigmashake_get_agent_usage',
+    description: 'Get usage metrics for an agent',
+    schema: z.object({
+      agent_id: z.string(),
+      from_date: z.string().optional(),
+      to_date: z.string().optional(),
+    }),
+    async execute(args) {
+      const result = await client.agents.getUsage(args.agent_id, {
+        fromDate: args.from_date,
+        toDate: args.to_date,
+      });
+      return jsonResult(result);
+    },
+  });
+
   return [
     // Documents
     sigmashake_search_documents,
