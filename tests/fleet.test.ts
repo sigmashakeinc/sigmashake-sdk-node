@@ -160,7 +160,7 @@ describe('Fleet REST API', () => {
 
   it('fleet.getConfig calls GET /v1/fleet/config', async () => {
     const config = {
-      heartbeatIntervalSecs: 30,
+      heartbeatIntervalSecs: 60,
       metricsIntervalSecs: 60,
       maxAgents: 1000,
       alertThresholds: { missedHeartbeats: 3, errorRatePct: 5 },
@@ -171,7 +171,7 @@ describe('Fleet REST API', () => {
 
     const result = await client.fleet.getConfig();
 
-    expect(result.heartbeatIntervalSecs).toBe(30);
+    expect(result.heartbeatIntervalSecs).toBe(60);
     expect(result.autoScaleEnabled).toBe(true);
 
     globalThis.fetch = originalFetch;
