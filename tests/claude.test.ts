@@ -158,6 +158,18 @@ describe('createTools', () => {
       'sigmashake_get_account_usage',
       'sigmashake_get_subscription',
       'sigmashake_create_token',
+      'sigmashake_create_trigger',
+      'sigmashake_list_triggers',
+      'sigmashake_execute_trigger',
+      'sigmashake_get_trigger_status',
+      'sigmashake_delete_trigger',
+      'sigmashake_store_context',
+      'sigmashake_get_context',
+      'sigmashake_delete_context',
+      'sigmashake_register_tools',
+      'sigmashake_list_agent_tools',
+      'sigmashake_unregister_tool',
+      'sigmashake_get_agent_usage',
     ];
 
     for (const name of expected) {
